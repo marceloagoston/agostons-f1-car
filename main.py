@@ -1,5 +1,6 @@
 import pygame
 import random
+import time as t
 
 from constants.colors import *
 
@@ -50,6 +51,11 @@ kers_rect.topright = (WINDOW_WIDTH - 50, 55)
 vidas_text = fuente_pixel_chica.render(f'Vidas: {vidas}', True, AMARILLO)
 vidas_rect = vidas_text.get_rect()
 vidas_rect.topright = (150, 55)
+
+# Texto Tiempo
+tiempo_text = fuente_pixel_chica.render(f'Tiempo: 00:00', True, AMARILLO)
+tiempo_rect = tiempo_text.get_rect()
+tiempo_rect.center = (WINDOW_WIDTH // 2, 65)
 
 ### Gameover
 gameover_text = fuente_pixel_grande.render(' Juego Terminado ', True, GREEN, DARKGREEN)
@@ -143,6 +149,12 @@ golpe_sound.set_volume(.2)
 silence = False
 running = True
 pausado = False
+aux = 1
+aux2 = 0
+minutos = 0
+
+text_minutos = '00'
+text_segundos = '00'
 
 while running:
 
@@ -266,11 +278,30 @@ while running:
         bot_rect.x = random.randint(20, WINDOW_WIDTH)
         bot_rect.y = random.randint(100, WINDOW_HEIGHT)
 
+    
+    # Cronometro
+    segundos = int(pygame.time.get_ticks()/1000)
+
+    if aux == segundos:
+        aux+=1
+        aux2+=1 
+        
+        if segundos % 60 == 0:
+            minutos += 1
+            aux2 = 0
+
+        text_minutos = str(minutos).zfill(2)
+        text_segundos = str(aux2).zfill(2)
+        # print(f'Tiempo: {text_minutos}:{text_segundos}')
+
+
 	# Actualizar HUD
     velocidad_text = fuente_pixel.render(f'Velocidad: 0', True, GREEN, DARKGREEN)
     puntos_text = fuente_pixel.render(f'Puntos: {puntos}',  True, AMARILLO)
     kers_text = fuente_pixel_chica.render(f'Kers: {kers_actual}', True, AMARILLO)
     vidas_text = fuente_pixel_chica.render(f'Vidas: {vidas}', True, AMARILLO)
+    tiempo_text = fuente_pixel_chica.render(f'Tiempo: {text_minutos}:{text_segundos}', True, AMARILLO)
+    
 
 	# Pintar de negro la pantalla
     # display_surface.fill(GREY)
@@ -282,6 +313,7 @@ while running:
     display_surface.blit(title_text, title_rect)
     display_surface.blit(kers_text, kers_rect)
     display_surface.blit(vidas_text, vidas_rect)
+    display_surface.blit(tiempo_text, tiempo_rect)
     display_surface.blit(instrucciones_text, instrucciones_rect)
     display_surface.blit(pausa_text, pausa_rect)
     display_surface.blit(instrucciones_salir_text, instrucciones_salir_rect)
@@ -307,6 +339,18 @@ while running:
 	# Tick the clock
     clock.tick(FPS)
 
+    # Frenar juego por tiempo
+    if segundos == 10:
+        pausado = True
+        pygame.mixer.music.set_volume(0.05)
+
+        display_surface.blit(pausa_cartel_text, pausa_cartel_rect)
+        display_surface.blit(presskey_pausa_text, presskey_pausa_rect)
+        pygame.display.update()
+
+        # CONTINUAR
+        while pausado:
+            print('FIN DEl JUEGO POR TIEMPO')
 
 
 # Cerrar juego
