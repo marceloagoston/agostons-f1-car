@@ -1,8 +1,8 @@
 import pygame
 
 # Dimensiones de la pantalla
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 800
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
 
 # Seteamos reloj y FPS
 FPS = 60

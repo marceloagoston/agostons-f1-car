@@ -125,6 +125,9 @@ bot_rect.x = random.randint(32, WINDOW_WIDTH - 32)
 #primer parametro no tengo idea, el otro es la altura de la pantalla menos el lo grande que es la planta
 bot_rect.y = random.randint(112, WINDOW_HEIGHT - 32)
 
+# Imagen Background
+bg = pygame.image.load("./assets/img/bg.jpg")
+
 # Música
 pygame.mixer.music.load("./assets/sounds/Le Grand Chase.mp3")
 pygame.mixer.music.play(-1, 0.0)
@@ -194,7 +197,12 @@ while running:
     if keys[pygame.K_UP] and hero_rect.top > 80:
         hero_rect.y -= velocidad_actual
         hero_img = hero_img_arr
+
     if keys[pygame.K_DOWN] and hero_rect.bottom < WINDOW_HEIGHT:
+        hero_rect.y += velocidad_actual
+        hero_img = hero_img_ab
+
+    if keys[pygame.K_RSHIFT] and hero_rect.bottom < WINDOW_HEIGHT:
         hero_rect.y += velocidad_actual
         hero_img = hero_img_ab
 
@@ -229,7 +237,7 @@ while running:
             display_surface.blit(gameover_text, gameover_rect)
             display_surface.blit(presskey_text, presskey_rect)
             display_surface.blit(quit_text, quit_rect)
-           
+
             pygame.display.update()
             pygame.mixer.music.stop()
 
@@ -265,7 +273,9 @@ while running:
     vidas_text = fuente_pixel_chica.render(f'Vidas: {vidas}', True, AMARILLO)
 
 	# Pintar de negro la pantalla
-    display_surface.fill(GREY)
+    # display_surface.fill(GREY)
+    display_surface.blit(bg, (0, 0))
+
 
 	# Pintar la cabecera
     display_surface.blit(puntos_text, puntos_rect)
